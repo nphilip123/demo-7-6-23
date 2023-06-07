@@ -7,14 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../model/chatMessage/chat_message_model.dart';
 import '../../utilities/api/api_endpoints.dart';
-import '../../utilities/shared_preference/sharedpreference.dart';
+// import '../../utilities/shared_preference/sharedpreference.dart';
 import 'package:http/http.dart' as http;
-
-import '../chapterSection/chapter_history.dart';
 
 class ChatMessages with ChangeNotifier {
   List<ChatMessageModel> messsages = [];
   bool chatBottomNavigationStatus = true;
+  String activeToken = "Error";
 
   void insertTextMessage(int user, String message) {
     String time = DateFormat("Hm").format(DateTime.now());
@@ -24,7 +23,7 @@ class ChatMessages with ChangeNotifier {
       origin: user,
       time: time,
     );
-    messsages.insert(0,chapter);
+    messsages.insert(0, chapter);
     notifyListeners();
   }
 
@@ -33,58 +32,56 @@ class ChatMessages with ChangeNotifier {
     notifyListeners();
   }
 
-  void setFirstmessage(String categoryId) async {
+  void setFirstmessage() async {
     chatBottomNavigationStatus = false;
     notifyListeners();
-    var history = await ChapterHistory.fetchChat(categoryId);
-    if (history == "null" || history == "Error") return;
-    for (final set in history['Conversation']) {
-      if (set['question'] != null && set['answer'] == null) {
-        String time = DateFormat("Hm").format(DateTime.now());
-        // ignore: use_build_context_synchronously
-        ChatMessageModel chapter = ChatMessageModel(
-          type: "text",
-          message: set['question'],
-          origin: 0,
-          time: time,
-        );
-        messsages.insert(0,chapter);
-        chatBottomNavigationStatus = true;
-        notifyListeners();
-      }
-    }
+    String time = DateFormat("Hm").format(DateTime.now());
+    // ignore: use_build_context_synchronously
+    ChatMessageModel chapter = ChatMessageModel(
+      type: "text",
+      message: "Hello Start your session by setting the context above.",
+      origin: 0,
+      time: time,
+    );
+    messsages.insert(0, chapter);
+    chatBottomNavigationStatus = true;
+    notifyListeners();
   }
 
-  void insertAudioText(File message, String path,) {
+  void insertAudioText(
+    File message,
+    String path,
+  ) {
     // debugPrint("${message.path},$path");
     chatBottomNavigationStatus = false;
     notifyListeners();
-    sttConversion(message, path).then((value) {
+    sttConversion(message, path).then((value) async {
       String time = DateFormat("Hm").format(DateTime.now());
-      if (value != "Error") {
+      if (value != "Error"){
+        String botResponse = await fetchChat(value, activeToken);
         ChatMessageModel chapter = ChatMessageModel(
           type: "audio",
           origin: 1,
           audioMessage: message,
-          audioText: value['audio'],
+          audioText: value,
           time: time,
         );
-        messsages.insert(0,chapter);
+        messsages.insert(0, chapter);
         ChatMessageModel chapter1 = ChatMessageModel(
           type: "text",
           origin: 0,
-          message: value['response'],
+          message: botResponse,
           time: time,
         );
-        messsages.insert(0,chapter1);
+        messsages.insert(0, chapter1);
       } else {
         ChatMessageModel chapter = ChatMessageModel(
           type: "text",
           origin: 1,
-          message:"Error",
+          message: "Error",
           time: time,
         );
-        messsages.insert(0,chapter);
+        messsages.insert(0, chapter);
       }
       chatBottomNavigationStatus = true;
       notifyListeners();
@@ -98,36 +95,68 @@ class ChatMessages with ChangeNotifier {
 
   void getQuestion(String message) async {
     setchatBottomNavigationStatus(false);
-    dynamic data = await fetchChat(message);
-    if (data['response'] != null) {
-      insertTextMessage(0, data['response']);
-    } else {
-      insertTextMessage(0, "Connection Error");
-    }
+    dynamic data = await fetchChat(message, activeToken);
+    insertTextMessage(0, data);
     setchatBottomNavigationStatus(true);
   }
 
-  static Future<dynamic> fetchChat(String message) async {
-    Map<String, String> queryParams = {
-      'id': "demo",
-    };
-    String queryString = Uri(queryParameters: queryParams).query;
+  void setcontext(String message) async {
+    setchatBottomNavigationStatus(false);
+    dynamic data = await setContext(message);
+    activeToken = data;
+    notifyListeners();
+    setchatBottomNavigationStatus(true);
+  }
+
+  static Future<dynamic> setContext(String message) async {
     final url = Uri.parse(
-        '${ApiEndPoints.baseUrl}${ApiEndPoints.chatSectionEndPoints.chatInput}?$queryString');
-    String token = await SharedPreferenceUtil.getUserToken();
-    final body = jsonEncode({'text': message});
+        '${ApiEndPoints.baseUrl}${ApiEndPoints.chatSectionEndPoints.setContext}');
+    final body = jsonEncode({'context': message});
     try {
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
         },
         body: body,
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data;
+        if (data['message'] == "Context is saved") {
+          return data['token'];
+        } else {
+          return 'Error';
+        }
+      } else {
+        return "Error";
+      }
+    } on SocketException {
+      return ('Error');
+    } catch (e) {
+      return ('Error');
+    }
+  }
+
+  static Future<dynamic> fetchChat(String message, String activetoken) async {
+    if (activetoken == "Error") {
+      return "Error : context not set";
+    }
+    final url = Uri.parse(
+        '${ApiEndPoints.baseUrl}${ApiEndPoints.chatSectionEndPoints.chatInput}');
+    // String token = await SharedPreferenceUtil.getUserToken();
+    final body = jsonEncode({'prompt': message, 'token': activetoken});
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        debugPrint('${data['message']}');
+        return data['message'];
       } else {
         return "Error Connecting Try again later";
       }
@@ -138,42 +167,32 @@ class ChatMessages with ChangeNotifier {
     }
   }
 
-  static Future<dynamic> sttConversion(
-      File audio, String path) async {
+  static Future<dynamic> sttConversion(File audio, String path) async {
     return FFmpegKit.execute('-i ${audio.path} -f wav $path')
         .then((session) async {
       // ignore: unrelated_type_equality_checks
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        // debugPrint('Conversion successful!');
+        debugPrint('Conversion successful!');
       } else {
-        // debugPrint('Conversion failed with exit code $returnCode');
+        debugPrint('Conversion failed with exit code $returnCode');
       }
     }).then((value) async {
       List<int> bytes = File(path).readAsBytesSync();
-
-      Map<String, String> queryParams = {
-        'contentType': 'audio',
-      };
-      String queryString = Uri(queryParameters: queryParams).query;
       final url = Uri.parse(
-          '${ApiEndPoints.baseUrl}${ApiEndPoints.chatSectionEndPoints.chatInput}/?$queryString');
-      String token = await SharedPreferenceUtil.getUserToken();
+          '${ApiEndPoints.baseUrl1}${ApiEndPoints.chatSectionEndPoints.speechText}');
       try {
         final response = await http.post(
           url,
           headers: {
             'Content-Type': 'audio/mpeg',
-            'Authorization': 'Bearer $token',
           },
           body: bytes,
         );
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
-          if (data['request'] != null &&
-              data['response'] != null &&
-              data['audio'] != null) {
-            return data;
+          if (data['Text'] != null) {
+            return data['Text'];
           } else {
             return "Error";
           }

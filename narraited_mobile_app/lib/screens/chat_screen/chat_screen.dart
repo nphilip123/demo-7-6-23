@@ -18,9 +18,9 @@ import 'package:provider/provider.dart';
 import '../../provider/chapterSection/chapter_history.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen(
-      {Key? key,})
-      : super(key: key);
+  const ChatScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -40,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // toggle visibility when keyboard is pressed
   final FocusNode _focusNode = FocusNode();
+  final FocusNode focusNode = FocusNode();
   bool _isVisibleText = false;
   void _toggleVisibility() {
     setState(() {
@@ -51,9 +52,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // toggle visibilty when keyboard is hidden
   void toggleVisibility() {
-    setState(() {
+    if(_isVisibleText != false){
+      setState(() {
       _isVisibleText = !_isVisibleText;
     });
+    }
   }
 
   //  temporary file
@@ -77,8 +80,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ChatMessages>(context, listen: false)
-                                .reset();
+      Provider.of<ChatMessages>(context, listen: false).reset();
+      Provider.of<ChatMessages>(context, listen: false).setFirstmessage();
     });
     initDirectory();
     subscription = KeyboardVisibilityController().onChange.listen((event) {
@@ -106,20 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
         // ignore: prefer_const_constructors
         child: Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-                title: const Text(
-                  "Demo",
-                  style: Styles.AppBarStyle,
-                ),
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.chevron_left_outlined,
-                    color: Colors.black,
-                  ),
-                  onPressed: () async {
-                    returnBack();
-                  },
-                )),
+            appBar: AppBar(title: const Text("Demo"),),
             body: chatSection(),
             bottomNavigationBar: Consumer<ChatMessages>(
                 // ignore: non_constant_identifier_names, avoid_types_as_parameter_names
@@ -206,8 +196,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (!mounted) {
       return;
     }
-    Provider.of<ChatMessages>(context, listen: false)
-        .getQuestion(message);
+    Provider.of<ChatMessages>(context, listen: false).getQuestion(message);
   }
 
   // ScrollController listScrollController = ScrollController();
@@ -261,7 +250,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   style: const TextStyle(fontSize: 16, color: Colors.black),
                   focusNode: _focusNode,
                   cursorColor: const Color(0xff1C75B6),
-                  autofocus: true,
+                  // autofocus: true,
                 ),
                 trailing: IconButton(
                     icon: const Icon(

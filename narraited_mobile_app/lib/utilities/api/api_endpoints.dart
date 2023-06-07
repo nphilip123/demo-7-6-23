@@ -1,8 +1,8 @@
 class ApiEndPoints {
-  // static const String baseUrl = "http://20.66.79.74:8080/";
-  static const String baseUrl = "https://api.narraited.com/";
-  // static const String baseUrl = "http://10.10.1.182:8080/";
-
+  static const String baseUrl = "http://35.255.9.28:5000/";
+  // static const String baseUrl = "https://api.narraited.com/";
+  static const String baseUrl1 = "http://138.91.242.52:8080/";
+  // static const String baseUrl1 = "https://api.narraited.com/";
   static GoogleSigninEndPoints googleSigninEndPoints = GoogleSigninEndPoints();
   static ChatSectionEndPoints chatSectionEndPoints = ChatSectionEndPoints();
   static HomeSectionEndPoints homeSectionEndPoints = HomeSectionEndPoints();
@@ -19,7 +19,9 @@ class GoogleSigninEndPoints {
 }
 
 class ChatSectionEndPoints {
-  final String chatInput = 'input-text';
+  final String chatInput = 'get_answer';
+  final String setContext = 'set_context';
+  final String speechText = 'speech-text';
 }
 
 class BiographySectionEndPoints {
