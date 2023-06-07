@@ -108,16 +108,27 @@ class _ChatScreenState extends State<ChatScreen> {
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
               title: const Text("DemoApp",style: TextStyle(color: Colors.blueAccent),),
-              bottom: PreferredSize(preferredSize: const Size.fromHeight(100),
+              bottom: PreferredSize(preferredSize: const Size.fromHeight(150),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 10),
-                  const TextField(
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      hintText: "Enter text or url context you would like to discuss about"
+                   TextFormField(
+                    maxLines: 1,
+                    cursorColor: Colors.blueAccent,
+
+                    decoration: const InputDecoration(
+                      hintText: "Enter text or url context you would like to discuss about",
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          style: BorderStyle.none, color: Colors.blueAccent
+                        )
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          style: BorderStyle.none, color: Colors.blueAccent
+                        )
+                      )
                     ),
                   ),
                   const SizedBox(height: 8),
