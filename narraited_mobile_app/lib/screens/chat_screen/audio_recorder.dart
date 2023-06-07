@@ -13,10 +13,9 @@ import '../../provider/chatSection/chatmessages.dart';
 
 class AudioRecorder extends StatefulWidget {
   final File tempFile;
-  final String categoryId;
 
   const AudioRecorder(
-      {Key? key, required this.tempFile, required this.categoryId})
+      {Key? key, required this.tempFile})
       : super(key: key);
 
   @override
@@ -93,7 +92,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       String filePath = '${_file.path}/$recordingFileName';
       // ignore: use_build_context_synchronously
       Provider.of<ChatMessages>(context, listen: false)
-          .insertAudioText(audioFile, filePath, widget.categoryId);
+          .insertAudioText(audioFile, filePath);
       setState(() {
         isRecorderStatus = false;
         _isPaused = false;

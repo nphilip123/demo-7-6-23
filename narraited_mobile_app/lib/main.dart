@@ -3,7 +3,7 @@ import 'package:narraited_mobile_app/provider/chapterSection/chapter_history.dar
 import 'package:narraited_mobile_app/provider/chapterSection/chapters.dart';
 import 'package:narraited_mobile_app/provider/chatSection/chatmessages.dart';
 import 'package:narraited_mobile_app/provider/userAuthSection/user_auth_controller.dart';
-import 'package:narraited_mobile_app/screens/splash_section/splash_section.dart';
+import 'package:narraited_mobile_app/screens/chat_screen/chat_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -43,7 +43,7 @@ class MainApp extends StatelessWidget {
           elevation: 0.2,
         ),
       ),
-      home: const SplashSection(),
+      home: const ChatScreen(),
     );
   }
 }

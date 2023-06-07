@@ -18,15 +18,8 @@ import 'package:provider/provider.dart';
 import '../../provider/chapterSection/chapter_history.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String categoryId;
-  final String categoryStatus;
-  final String categoryName;
-
   const ChatScreen(
-      {Key? key,
-      required this.categoryId,
-      required this.categoryStatus,
-      required this.categoryName})
+      {Key? key,})
       : super(key: key);
 
   @override
@@ -80,23 +73,13 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void setInitialquestion() {
-    if (widget.categoryStatus == "TO DO") {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        getQuestion("hello");
-      });
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Provider.of<ChatMessages>(context, listen: false)
-            .setFirstmessage(widget.categoryId);
-      });
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    setInitialquestion();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ChatMessages>(context, listen: false)
+                                .reset();
+    });
     initDirectory();
     subscription = KeyboardVisibilityController().onChange.listen((event) {
       final message = event ? "opened" : "close";
@@ -124,8 +107,8 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
-                title: Text(
-                  widget.categoryName,
+                title: const Text(
+                  "Demo",
                   style: Styles.AppBarStyle,
                 ),
                 leading: IconButton(
@@ -177,7 +160,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                     // ignore: prefer_const_constructors
                                     return AudioRecorder(
                                       tempFile: tempFile,
-                                      categoryId: widget.categoryId,
                                     );
                                   });
                             },
@@ -225,7 +207,7 @@ class _ChatScreenState extends State<ChatScreen> {
       return;
     }
     Provider.of<ChatMessages>(context, listen: false)
-        .getQuestion(message, widget.categoryId);
+        .getQuestion(message);
   }
 
   // ScrollController listScrollController = ScrollController();

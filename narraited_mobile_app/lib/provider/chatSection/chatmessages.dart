@@ -55,11 +55,11 @@ class ChatMessages with ChangeNotifier {
     }
   }
 
-  void insertAudioText(File message, String path, String categoryId) {
+  void insertAudioText(File message, String path,) {
     // debugPrint("${message.path},$path");
     chatBottomNavigationStatus = false;
     notifyListeners();
-    sttConversion(message, path, categoryId).then((value) {
+    sttConversion(message, path).then((value) {
       String time = DateFormat("Hm").format(DateTime.now());
       if (value != "Error") {
         ChatMessageModel chapter = ChatMessageModel(
@@ -96,9 +96,9 @@ class ChatMessages with ChangeNotifier {
     notifyListeners();
   }
 
-  void getQuestion(String message, String categoryId) async {
+  void getQuestion(String message) async {
     setchatBottomNavigationStatus(false);
-    dynamic data = await fetchChat(message, categoryId);
+    dynamic data = await fetchChat(message);
     if (data['response'] != null) {
       insertTextMessage(0, data['response']);
     } else {
@@ -107,9 +107,9 @@ class ChatMessages with ChangeNotifier {
     setchatBottomNavigationStatus(true);
   }
 
-  static Future<dynamic> fetchChat(String message, String categoryId) async {
+  static Future<dynamic> fetchChat(String message) async {
     Map<String, String> queryParams = {
-      'id': categoryId,
+      'id': "demo",
     };
     String queryString = Uri(queryParameters: queryParams).query;
     final url = Uri.parse(
@@ -139,7 +139,7 @@ class ChatMessages with ChangeNotifier {
   }
 
   static Future<dynamic> sttConversion(
-      File audio, String path, String categoryId) async {
+      File audio, String path) async {
     return FFmpegKit.execute('-i ${audio.path} -f wav $path')
         .then((session) async {
       // ignore: unrelated_type_equality_checks
@@ -153,7 +153,6 @@ class ChatMessages with ChangeNotifier {
       List<int> bytes = File(path).readAsBytesSync();
 
       Map<String, String> queryParams = {
-        'id': categoryId,
         'contentType': 'audio',
       };
       String queryString = Uri(queryParameters: queryParams).query;

@@ -94,8 +94,8 @@ class _LifeEventCardState extends State<LifeEventCard> {
                             .setChapterStatusComplete(widget.categoryId);
                         Navigator.pop(context);
                       },
-                      child: const Row(
-                        children: [
+                      child: Row(
+                        children: const [
                           Icon(Icons.done_all, color: Colors.black),
                           SizedBox(
                             width: 20,
@@ -110,7 +110,7 @@ class _LifeEventCardState extends State<LifeEventCard> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent, elevation: 0.0),
-                  child: const Row(children:[
+                  child: Row(children:const [
                     Icon(
                       Icons.edit,
                       color: Colors.black,
@@ -137,8 +137,8 @@ class _LifeEventCardState extends State<LifeEventCard> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent, elevation: 0.0),
-                  child: const Row(
-                    children: [
+                  child: Row(
+                    children: const [
                       Icon(Icons.delete, color: Colors.red),
                       SizedBox(
                         width: 20,

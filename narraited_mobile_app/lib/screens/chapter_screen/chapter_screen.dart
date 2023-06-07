@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../provider/chatSection/chatmessages.dart';
 import '../../utilities/icons/chat_screen_icons.dart';
 import '../../utilities/styles.dart';
-import '../chat_screen/chat_screen.dart';
 
 class ChapterScreen extends StatefulWidget {
   final String cardTitle;
@@ -279,18 +278,18 @@ class _ChapterScreenState extends State<ChapterScreen> {
                       alignment: FractionalOffset.center,
                       child: FloatingActionButton(
                           onPressed: () {
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(
-                              builder: (context) {
-                                // ignore: prefer_const_constructors
-                                return ChatScreen(
-                                  categoryId: widget.categoryId,
-                                  categoryStatus: ChaptersList
-                                      .chapterList[widget.index].status!,
-                                  categoryName: widget.cardTitle,
-                                );
-                              },
-                            ));
+                            // Navigator.pushReplacement(context,
+                            //     MaterialPageRoute(
+                            //   builder: (context) {
+                            //     // ignore: prefer_const_constructors
+                            //     return ChatScreen(
+                            //       categoryId: widget.categoryId,
+                            //       categoryStatus: ChaptersList
+                            //           .chapterList[widget.index].status!,
+                            //       categoryName: widget.cardTitle,
+                            //     );
+                            //   },
+                            // ));
                             Provider.of<ChatMessages>(context, listen: false)
                                 .reset();
                           },
