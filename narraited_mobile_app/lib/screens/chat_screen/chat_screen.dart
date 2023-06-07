@@ -107,19 +107,36 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
-                title: const Text(
-                  "Demo",
-                  style: Styles.AppBarStyle,
-                ),
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.chevron_left_outlined,
-                    color: Colors.black,
+              title: const Text("DemoApp",style: TextStyle(color: Colors.blueAccent),),
+              bottom: PreferredSize(preferredSize: const Size.fromHeight(100),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 10),
+                  const TextField(
+                    decoration: InputDecoration(
+                      hintText: "Enter text or url context you would like to discuss about"
+                    ),
                   ),
-                  onPressed: () async {
-                    returnBack();
-                  },
-                )),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(onPressed: (){
+                        //Handle button onPressed action
+                      },style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent
+                      ), child: const Text("Set context with text")),
+                      ElevatedButton(onPressed: (){
+                        // Handle button onPressed action
+                      },style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent
+                      ), child: const Text("Set context with url"))
+                    ],
+                  )
+                ],
+              ),)
+            ),
             body: chatSection(),
             bottomNavigationBar: Consumer<ChatMessages>(
                 // ignore: non_constant_identifier_names, avoid_types_as_parameter_names
