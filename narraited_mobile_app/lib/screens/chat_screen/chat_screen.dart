@@ -116,12 +116,17 @@ class _ChatScreenState extends State<ChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 10),
-                  const TextField(
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(10, 0, 10,0),
+                    child: TextField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    decoration: InputDecoration(
-                      hintText: "Enter text or url context you would like to discuss about"
+                    focusNode: focusNode,
+                    controller: contextInsert,
+                    decoration: const InputDecoration(
+                      hintText: "Enter your context"
                     ),
+                  ),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -222,7 +227,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // message input controller
   final messageInsert = TextEditingController();
-
+  final contextInsert = TextEditingController();
   // function to get chat from gpt
   void getQuestion(String message) async {
     if (!mounted) {
