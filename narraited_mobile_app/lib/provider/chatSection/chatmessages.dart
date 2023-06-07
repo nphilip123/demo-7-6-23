@@ -57,7 +57,7 @@ class ChatMessages with ChangeNotifier {
     notifyListeners();
     sttConversion(message, path).then((value) async {
       String time = DateFormat("Hm").format(DateTime.now());
-      if (value != "Error"){
+      if (value != "Error") {
         String botResponse = await fetchChat(value, activeToken);
         ChatMessageModel chapter = ChatMessageModel(
           type: "audio",
@@ -100,40 +100,28 @@ class ChatMessages with ChangeNotifier {
     setchatBottomNavigationStatus(true);
   }
 
-  void setcontext(String message) async {
+  void setcontext(String message, String type) async {
     setchatBottomNavigationStatus(false);
-    dynamic data = await setContext(message);
+    dynamic data = await setContext(message, type);
     activeToken = data;
     notifyListeners();
     setchatBottomNavigationStatus(true);
   }
 
-  static Future<dynamic> setContext(String message) async {
-    final url = Uri.parse(
-        '${ApiEndPoints.baseUrl}${ApiEndPoints.chatSectionEndPoints.setContext}');
-    final body = jsonEncode({'context': message});
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data['message'] == "Context is saved") {
-          return data['token'];
-        } else {
-          return 'Error';
-        }
-      } else {
-        return "Error";
-      }
-    } on SocketException {
-      return ('Error');
-    } catch (e) {
-      return ('Error');
+  static Future<dynamic> setContext(String message, String type) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request =
+        http.Request('POST', Uri.parse("http://35.225.9.28:5000/set_context"));
+    request.body = json.encode({type: message});
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var result = await response.stream.bytesToString();
+      return jsonDecode(result)['token'];
+    } else {
+      return "Error";
     }
   }
 
@@ -141,29 +129,19 @@ class ChatMessages with ChangeNotifier {
     if (activetoken == "Error") {
       return "Error : context not set";
     }
-    final url = Uri.parse(
-        '${ApiEndPoints.baseUrl}${ApiEndPoints.chatSectionEndPoints.chatInput}');
-    // String token = await SharedPreferenceUtil.getUserToken();
-    final body = jsonEncode({'prompt': message, 'token': activetoken});
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        debugPrint('${data['message']}');
-        return data['message'];
-      } else {
-        return "Error Connecting Try again later";
-      }
-    } on SocketException catch (e) {
-      return ('Sorry Session timed out: $e');
-    } catch (e) {
-      return ('Sorry an error occurred: $e');
+    var headers = {'Content-Type': 'application/json'};
+    var request =
+        http.Request('POST', Uri.parse("http://35.225.9.28:5000/get_answer"));
+    request.body = jsonEncode({'prompt': message, 'token': activetoken});
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var result = await response.stream.bytesToString();
+      return jsonDecode(result)['message'];
+    } else {
+      return "Error";
     }
   }
 

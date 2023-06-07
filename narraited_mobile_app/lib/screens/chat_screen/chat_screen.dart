@@ -52,10 +52,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // toggle visibilty when keyboard is hidden
   void toggleVisibility() {
-    if(_isVisibleText != false){
+    if (_isVisibleText != false) {
       setState(() {
-      _isVisibleText = !_isVisibleText;
-    });
+        _isVisibleText = !_isVisibleText;
+      });
+      focusNode.requestFocus();
+      focusNode.unfocus();
     }
   }
 
@@ -110,49 +112,66 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
-              title: const Text("DemoApp",style: TextStyle(color: Colors.blueAccent),),
-              bottom: PreferredSize(preferredSize: const Size.fromHeight(150),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 10),
-                   TextFormField(
-                    maxLines: 1,
-                    cursorColor: Colors.blueAccent,
-
-                    decoration: const InputDecoration(
-                      hintText: "Enter text or url context you would like to discuss about",
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          style: BorderStyle.none, color: Colors.blueAccent
-                        )
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          style: BorderStyle.none, color: Colors.blueAccent
-                        )
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                title: const Text(
+                  "Training Assistant",
+                  style: TextStyle(color: Color(0xff1C75B6)),
+                ),
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(100),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ElevatedButton(onPressed: (){
-                        //Set context with text Api call
-                      },style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent
-                      ), child: const Text("Set context with text")),
-                      ElevatedButton(onPressed: (){
-                        //Set context with url Api call
-                      },style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent
-                      ), child: const Text("Set context with url"))
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: TextFormField(
+                          maxLines: 1,
+                          cursorColor: Colors.blueAccent,
+                          focusNode: focusNode,
+                          controller: contextInsert,
+                          decoration: const InputDecoration(
+                              hintText:
+                                  "Enter the context you would like to discuss about",
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      style: BorderStyle.none,
+                                      color: Colors.blueAccent)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      style: BorderStyle.none,
+                                      color: Colors.blueAccent))),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Provider.of<ChatMessages>(context,
+                                        listen: false)
+                                    .setcontext(contextInsert.text, "context");
+                                contextInsert.clear();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff1C75B6)),
+                              child: const Text("Set context with text")),
+                          ElevatedButton(
+                              onPressed: () {
+                                //Set context with url Api call
+                                Provider.of<ChatMessages>(context,
+                                        listen: false)
+                                    .setcontext(contextInsert.text, "url");
+                                contextInsert.clear();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff1C75B6)),
+                              child: const Text("Set context with url"))
+                        ],
+                      ),
+                      const SizedBox(height: 8),
                     ],
-                  )
-                ],
-              ),)
-            ),
+                  ),
+                )),
             body: chatSection(),
             bottomNavigationBar: Consumer<ChatMessages>(
                 // ignore: non_constant_identifier_names, avoid_types_as_parameter_names
