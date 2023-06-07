@@ -114,6 +114,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   const SizedBox(height: 10),
                   const TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
                     decoration: InputDecoration(
                       hintText: "Enter text or url context you would like to discuss about"
                     ),
@@ -123,12 +125,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(onPressed: (){
-                        //Handle button onPressed action
+                        //Set context with text Api call
                       },style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blueAccent
                       ), child: const Text("Set context with text")),
                       ElevatedButton(onPressed: (){
-                        // Handle button onPressed action
+                        //Set context with url Api call
                       },style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blueAccent
                       ), child: const Text("Set context with url"))
