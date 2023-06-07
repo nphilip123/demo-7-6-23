@@ -1,0 +1,118 @@
+name: narraited_mobile_app
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.4
+
+environment:
+  sdk: '>=2.19.2 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.0.3
+  google_sign_in: ^6.0.2
+  shared_preferences: ^2.0.18
+  http: ^0.13.5
+  flutter_keyboard_visibility: ^5.4.0
+  bubble: ^1.2.1
+  intl: ^0.18.0
+  provider: ^6.0.5
+  flutter_sound: ^9.2.13
+  permission_handler: ^10.2.0
+  path_provider: ^2.0.14
+  audioplayers: ^3.0.1
+  loading_animation_widget: ^1.2.0+4
+  ffmpeg_kit_flutter: ^5.1.0
+  wave: ^0.2.2
+  flutter_reorderable_grid_view: ^4.0.0
+  url_launcher: ^6.1.11
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.12.0
+
+flutter_icons:
+  image_path: "assets/images/logo.png"
+  android: true
+  remove_alpha_ios: true
+  ios: true
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/logo_foreground.png"
+
+flutter:
+
+  fonts:
+    - family: PoppinsLight
+      fonts:
+        - asset: assets/fonts/Poppins-Light.ttf
+    - family: PoppinsLightItalic
+      fonts:
+        - asset: assets/fonts/Poppins-LightItalic.ttf
+          style: italic
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+    - family: PoppinsItalic
+      fonts:          
+        - asset: assets/fonts/Poppins-Italic.ttf
+          weight: 400
+          style: italic
+    - family: PoppinsMedium
+      fonts:
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+    - family: PoppinsMediumItalic
+      fonts:
+        - asset: assets/fonts/Poppins-MediumItalic.ttf
+          weight: 500
+          style: italic
+    - family: PoppinsSemiBold
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+    - family: PoppinsSemiBoldItalic
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+    - family: PoppinsBold
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+    - family: DMSans-Bold
+      fonts:
+        - asset: assets/fonts/DMSans-Bold.ttf
+          weight: 700
+    - family: PoppinsBoldItalic
+      fonts:
+        - asset: assets/fonts/Poppins-BoldItalic.ttf
+          weight: 700
+          style: italic
+    - family: HomelayoutIcons      
+      fonts:
+        - asset: assets/fonts/HomelayoutIcons.ttf
+    - family:  ChatScreenIcons
+      fonts:
+        - asset: assets/fonts/ChatScreenIcons.ttf
+    - family:  ProfileScreenIcons
+      fonts:
+        - asset: assets/fonts/ProfileScreenIcons.ttf
+    - family:  HomeScreenIcons
+      fonts:
+        - asset: assets/fonts/HomeScreenIcons.ttf
+  uses-material-design: true
+
+  assets:
+    - assets/images/narraited_splash.svg
+    - assets/images/narraited_appbar.svg
+    - assets/images/narraited_signup.svg
+    - assets/images/google_signin.svg
+    - assets/images/wave_chatscreen.svg
+    - assets/images/keyboard_chatscreen.svg
+    - assets/images/chatscreen_chatBot.svg
+    - assets/images/HomeScreenBooks.svg
+    - assets/images/profile_picture_default.svg
+    - assets/images/cardWave.png
